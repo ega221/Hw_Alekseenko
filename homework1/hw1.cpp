@@ -4,7 +4,7 @@
 
 using namespace std;
 
-bool compare(int main_x, int main_y, int x, int y)
+bool compare(float main_x, float main_y, float x, float y)
 {
     bool result = false;
     if (main_x != 0)
@@ -23,35 +23,35 @@ bool compare(int main_x, int main_y, int x, int y)
     return result;
 }
 
-double dot_prod(int main_x,int main_y,int x, int y) // функция скалярного произведения
+double dot_prod(float main_x,float main_y,float x, float y) // функция скалярного произведения
 {
     return (main_x*main_x + main_y*y)/(sqrt(pow(x,2)+pow(y, 2))*sqrt(pow(main_x,2)+pow(main_y,2)));
 }
 
 
-int get_coords_x(ifstream &input_file) // функция получения координаты x
+float get_coords_x(ifstream &input_file) // функция получения координаты x
 {
     string coord1;
-    int x;
+    float x;
     input_file >> coord1;
-    x = stoi(coord1);
+    x = stof(coord1);
     return x;
 }
 
-int get_coords_y(ifstream &input_file)  // функция получения координаты y
+float get_coords_y(ifstream &input_file)  // функция получения координаты y
 {
     string coord2;
-    int y;
+    float y;
     input_file >> ws >> coord2;
-    y = stoi(coord2);
+    y = stof(coord2);
     return y;
 }
 
 
 int main()
 {
-    int main_x;
-    int main_y;
+    float main_x;
+    float main_y;
     double temp_dot_prod;
     double leftmost_x = 0;
     double leftmost_y = 0;
@@ -59,8 +59,8 @@ int main()
     double rightmost_x = 0;
     double rightmost_y = 0;
     double rightmost_cos = 2;
-    int x;
-    int y;
+    float x;
+    float y;
 
     string line;
 
