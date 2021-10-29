@@ -15,7 +15,7 @@ bool compare(float main_x, float main_y, float x, float y)
         }
     } else
     {
-        if (x < 0)
+        if ((x < 0 && main_y > 0) || (x > 0 && main_y < 0))
         {
             result = true;
         }
@@ -65,7 +65,6 @@ int main()
     string line;
 
     ifstream input_file("in.txt");
-    ofstream output_file("result.txt");
 
     main_x  = get_coords_x(input_file);
     main_y  = get_coords_y(input_file);
@@ -92,8 +91,8 @@ int main()
         }
     }
 
-    output_file << "Leftmost: " << leftmost_x << ' ' << leftmost_y << endl;
-    output_file << "Rightmost: " << rightmost_x << ' ' << rightmost_y << endl;
+    cout << "Leftmost: " << leftmost_x << ' ' << leftmost_y << endl;
+    cout << "Rightmost: " << rightmost_x << ' ' << rightmost_y << endl;
 
     return 0;
 }
