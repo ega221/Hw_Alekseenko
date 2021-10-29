@@ -90,6 +90,7 @@ int main()
             rightmost_cos = temp_dot_prod;
         }
     }
+    input_file.close();
 
     cout << "Leftmost: " << leftmost_x << ' ' << leftmost_y << endl;
     cout << "Rightmost: " << rightmost_x << ' ' << rightmost_y << endl;

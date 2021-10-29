@@ -133,9 +133,9 @@ int main(int argc, char** argv)
     // Получаем начальные данные
     get_h0(input_file, h0);
     get_v0(input_file, vx, vy);
+
     calculate_1(input_file, h0, vx, vy, X, H, result);
+
     cout << result << endl;
-
-
     return 0;
 }
