@@ -65,9 +65,10 @@ int main()
     string line;
 
     ifstream input_file("in.txt");
-
-    main_x  = get_coords_x(input_file);
-    main_y  = get_coords_y(input_file);
+    if (getline(input_file, line)) {
+        main_x = get_coords_x(input_file);
+        main_y = get_coords_y(input_file);
+    }
 
 
     while (getline(input_file, line))
