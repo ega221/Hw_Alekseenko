@@ -23,27 +23,23 @@ double get_height(double h0, double vy, double t)
 
 void get_h0(ifstream &input_file, double &h) // Функция получения начальной высоты
 {
-    string temp;
-    input_file >> temp;
-    h = stod(temp);
+    input_file >> h;
 }
 
 void get_v0(ifstream &input_file, double &vx,double &vy) // Функция получения начальной скорости
 {
-    string v1;
-    string v2;
-    input_file >> v1 >> ws >> v2;
-    vx = stod(v1);
-    vy = stod(v2);
+
+    input_file >> vx >> vy;
+
 }
 
 void get_bar(ifstream &input_file,vector<double> &X, vector<double> &H) // функция считывания параметров столбов
 {
-    string x;
-    string h;
-    input_file >> x >> ws >> h;
-    X.push_back(stod(x));
-    H.push_back(stod(h));
+    double x;
+    double h;
+    input_file >> x >>  h;
+    X.push_back(x);
+    H.push_back(h);
 }
 void calculate_2(double x0,double h0, double vx, double vy, vector<double> &X, vector<double> &H, int &result,
                  int dir)
