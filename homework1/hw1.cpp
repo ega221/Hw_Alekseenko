@@ -18,7 +18,7 @@ bool compare(float main_x, float main_y, float x, float y)
 
 double dot_prod(float main_x,float main_y,float x, float y) // функция скалярного произведения
 {
-    return (main_x*main_x + main_y*y)/(sqrt(pow(x,2)+pow(y, 2))*sqrt(pow(main_x,2)+pow(main_y,2)));
+    return (main_x*x+main_y*y)/(sqrt(x*x+y*y)*sqrt(main_x*main_x+main_y*main_y));
 }
 
 
