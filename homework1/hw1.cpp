@@ -53,7 +53,7 @@ int main()
 
     string line;
 
-    ifstream input_file("in.txt");
+    ifstream input_file("in1M.txt");
 
     main_x = get_coords_x(input_file);
     main_y = get_coords_y(input_file);
@@ -65,15 +65,14 @@ int main()
         x = get_coords_x(input_file);
         y = get_coords_y(input_file);
         temp_dot_prod = dot_prod(main_x, main_y, x, y);
-        if (compare(main_x, main_y, x, y))
+        if (compare(main_x, main_y, x, y) && temp_dot_prod <= leftmost_cos)
         {
-            if ( temp_dot_prod < leftmost_cos)
-            {
-                leftmost_x = x;
-                leftmost_y = y;
-                leftmost_cos = temp_dot_prod;
-            }
-        } else if (temp_dot_prod < rightmost_cos)
+
+            leftmost_x = x;
+            leftmost_y = y;
+            leftmost_cos = temp_dot_prod;
+
+        } else if (temp_dot_prod <= rightmost_cos)
         {
             rightmost_x = x;
             rightmost_y = y;
