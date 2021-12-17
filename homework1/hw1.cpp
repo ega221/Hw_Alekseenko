@@ -7,19 +7,12 @@ using namespace std;
 bool compare(float main_x, float main_y, float x, float y)
 {
     bool result = false;
-    if (main_x != 0)
+
+    if (main_y*x < y*main_x)
     {
-        if (main_y/main_x*x > y)
-        {
-            result = true;
-        }
-    } else
-    {
-        if ((x < 0 && main_y > 0) || (x > 0 && main_y < 0))
-        {
-            result = true;
-        }
+        result = true;
     }
+
     return result;
 }
 
@@ -31,19 +24,15 @@ double dot_prod(float main_x,float main_y,float x, float y) // функция с
 
 float get_coords_x(ifstream &input_file) // функция получения координаты x
 {
-    string coord1;
     float x;
-    input_file >> coord1;
-    x = stof(coord1);
+    input_file >> x;
     return x;
 }
 
 float get_coords_y(ifstream &input_file)  // функция получения координаты y
 {
-    string coord2;
     float y;
-    input_file >> ws >> coord2;
-    y = stof(coord2);
+    input_file >> y;
     return y;
 }
 
@@ -65,10 +54,10 @@ int main()
     string line;
 
     ifstream input_file("in.txt");
-    if (getline(input_file, line)) {
-        main_x = get_coords_x(input_file);
-        main_y = get_coords_y(input_file);
-    }
+
+    main_x = get_coords_x(input_file);
+    main_y = get_coords_y(input_file);
+
 
 
     while (getline(input_file, line))
