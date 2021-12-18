@@ -46,8 +46,11 @@ void calculate_2(double x0,double h0, double vx, double vy, vector<double> &X, v
 {
     double y;
     double t;
-    for (int i = result; (i > -1 && i < X.size()); i = i + dir)
-    {
+    for (int i = result; (i > -1 && i < X.size()); i = i + dir) {
+        if (i == -1)
+        {
+            break;
+        }
         t = get_t(x0, X[i+dir], vx, dir);
         y = get_height(h0, vy, t);
         if (H[i + dir] < y)
@@ -132,6 +135,6 @@ int main(int argc, char** argv)
 
     calculate_1(input_file, h0, vx, vy, X, H, result);
 
-    cout << result << endl;
+    cout << result - 1 << endl;
     return 0;
 }
