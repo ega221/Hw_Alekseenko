@@ -53,7 +53,7 @@ int main()
 
     string line;
 
-    ifstream input_file("in1M.txt");
+    ifstream input_file("in.txt");
 
     main_x = get_coords_x(input_file);
     main_y = get_coords_y(input_file);
