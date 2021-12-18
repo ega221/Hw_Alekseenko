@@ -135,6 +135,6 @@ int main(int argc, char** argv)
 
     calculate_1(input_file, h0, vx, vy, X, H, result);
 
-    cout << result - 1 << endl;
+    cout << result<< endl;
     return 0;
 }
