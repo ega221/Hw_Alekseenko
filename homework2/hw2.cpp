@@ -58,7 +58,7 @@ void calculate_2(double x0,double h0, double vx, double vy, vector<double> &X, v
             result += dir;
         } else if((y < 0) || (result == 0))
         {
-            return;
+
         }
         else
         {
