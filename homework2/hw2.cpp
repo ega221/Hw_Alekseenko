@@ -1,140 +1,122 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
-#include <cmath>
-#include <algorithm>
+#include <string>
+#include <cstdlib>
 
 using namespace std;
 
-double get_t(double x0, double x, double vx,int dir)
+void get_prop(ifstream &input_file,double &prop)
 {
-    return (x - x0)/(dir*vx);
+    input_file >> prop;
+}
+void get_bar(ifstream &input_file, vector<double> &X, vector<double> &H)
+{
+    double temp;
+    get_prop(input_file, temp);
+    X.push_back(temp);
+    get_prop(input_file, temp);
+    H.push_back(temp);
 }
 
-double get_vy(double vy0, double t)
-{
-    return vy0 - 9.81*t;
-}
 
-double get_height(double h0, double vy, double t)
-{
-    return h0 + vy*t - 9.81/2 * pow(t, 2);
-}
-
-void get_h0(ifstream &input_file, double &h) // Функция получения начальной высоты
-{
-    input_file >> h;
-}
-
-void get_v0(ifstream &input_file, double &vx,double &vy) // Функция получения начальной скорости
-{
-
-    input_file >> vx >> vy;
-
-}
-
-void get_bar(ifstream &input_file,vector<double> &X, vector<double> &H) // функция считывания параметров столбов
-{
-    double x;
-    double h;
-    input_file >> x >>  h;
-    X.push_back(x);
-    H.push_back(h);
-}
-void calculate_2(double x0,double h0, double vx, double vy, vector<double> &X, vector<double> &H, int &result,
-                 int dir)
+void calculate(double x0,double h0, double vx, double vy, vector<double> &X, vector<double> &H, int &result, int dir)
 {
     double y;
     double t;
-    for (int i = result; (i > -1 && i < X.size()); i = i + dir) {
+    for (int i = result; i < X.size(); i = i + dir)
+    {
         if (i == -1)
         {
             break;
         }
-        t = get_t(x0, X[i+dir], vx, dir);
-        y = get_height(h0, vy, t);
-        if (H[i + dir] < y)
+        t = (X[i+dir] - x0)/(vx);
+
+        y =  h0 + vy * t * dir - 9.81 * t * t / 2;
+
+        if (H[i + dir] < y) // если пролетает выше
         {
             result += dir;
-        } else if((y < 0) || (result == 0))
+        } else if((y < 0) || (result == 0)) // если не долетел до следующей
         {
-
+            return;
         }
-        else
+        else // столкновение
         {
-            double vyt = get_vy(vy, t);
+            double vyt = vy - 9.81 * t * dir;
+
             dir = dir * -1;
-            calculate_2(X[i], y, vx, vyt, X, H, result, dir);
+            calculate(X[i], y, vx, vyt, X, H, result, dir);
             return;
         }
     }
 }
 
-
-void calculate_1(ifstream &input_file, double &h0, double &vx, double &vy, vector<double> &X, vector<double> &H,
-    int &result)
-{
-    string line;
-    double t;
-    double y;
-    while (getline(input_file,line))
-    {
-        get_bar(input_file, X, H);
-        t = get_t(0, X.back(), vx, 1);
-        y = get_height(h0, vy, t);
-        if(H.back() < y)
-        {
-            result++;
-        }
-        else if((y < 0) || (result == 0))
-        {
-            return;
-        }
-        else
-        {
-            double vyt = get_vy(vy, t);
-            calculate_2(X.back(), y, vx, vyt, X, H, result, -1);
-            return;
-        }
-    }
-}
 
 
 
 int main(int argc, char** argv)
+//int main()
 {
-    string input_filename;
+
+    string filename;
 
     if (argc == 2)
     {
-        input_filename = argv[1];
+        filename = argv[1];
     } else {
-        input_filename = "input.txt";
+        filename = "input.txt";
     }
-    ifstream input_file(input_filename);
+    ifstream input_file(filename);
 
-    // Начальные данные
+
+    // все необходимые переменные:
+    int sector=0;
     double h0;
     double vx;
     double vy;
 
-    // Результат
-    int result = 0;
-
-    // Вспомогательные переменные
-    int i = 0;
-    string line;
-
-    // Векторы с координатами и высотами столбов
     vector<double> X;
     vector<double> H;
 
-    // Получаем начальные данные
-    get_h0(input_file, h0);
-    get_v0(input_file, vx, vy);
+    if (input_file.is_open())
+    {
+        // Получаем начальную высоту и координаты вектора начальной скорости:
+        get_prop(input_file,h0);
+        get_prop(input_file,vx);
+        get_prop(input_file,vy);
 
-    calculate_1(input_file, h0, vx, vy, X, H, result);
+        //Непосредственно сам рассчет
 
-    cout << result<< endl;
+        // Сначала мы считаем данные до 1го столкновения
+        // dir: 1 - вправо, -1 - влево
+        // func
+        double t; // текущее время
+        double y; // высота полета шарика при данном t
+        while (!input_file.eof())
+        {
+            get_bar(input_file, X, H);
+
+            t =  (X.back() - 0)/(vx);
+            y =  h0 + vy * t - 9.81 * t * t / 2;
+
+            if(H.back() < y) // если пролетает выше
+            {
+                sector++;
+            }
+            else if((y < 0) || (sector == 0)) // если не долетел до следующей
+            {
+
+            }
+            else // столкновение
+            {
+                double vy_t = vy - 9.81 * t ;
+                calculate(X.back(), y, vx, vy_t, X, H, sector, -1);
+
+            }
+        }
+    }
+    cout << sector;
+
     return 0;
 }
