@@ -75,6 +75,7 @@ int main(int argc, char** argv)
     double h0;
     double vx;
     double vy;
+    string line;
 
     vector<double> X;
     vector<double> H;
@@ -93,7 +94,7 @@ int main(int argc, char** argv)
         // func
         double t; // текущее время
         double y; // высота полета шарика при данном t
-        while (!input_file.eof())
+        while (getline(input_file, line))
         {
             get_bar(input_file, X, H);
 
@@ -106,7 +107,7 @@ int main(int argc, char** argv)
             }
             else if((y < 0) || (sector == 0)) // если не долетел до следующей
             {
-
+                break;
             }
             else // столкновение
             {
@@ -116,7 +117,10 @@ int main(int argc, char** argv)
             }
         }
     }
+
     cout << sector;
+
+
 
     return 0;
 }
