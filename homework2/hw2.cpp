@@ -112,7 +112,7 @@ int main(int argc, char** argv)
             {
                 double vy_t = vy - 9.81 * t ;
                 calculate(X.back(), y, vx, vy_t, X, H, sector, -1);
-
+                break;
             }
         }
     }
