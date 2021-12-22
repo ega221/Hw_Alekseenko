@@ -6,21 +6,28 @@
 
 using namespace std;
 
-void get_prop(ifstream &input_file,double &prop)
-{
-    input_file >> prop;
-}
-void get_bar(ifstream &input_file, vector<double> &X, vector<double> &H)
-{
-    double temp;
-    get_prop(input_file, temp);
-    X.push_back(temp);
-    get_prop(input_file, temp);
-    H.push_back(temp);
+double get_x(string num) {
+    int probel = num.find(" "); // возвращается номер пробела
+    string X;
+    for (int i = 0; i<probel; ++i){
+        X.append(1, num[i]); // добавление в конец строки 1 символ num[i]
+    }
+    double x = atof(X.c_str());
+    return x;
 }
 
+double get_y(string num)
+{
+    int probel = num.find(" "); // возвращается номер пробела
+    string Y;
+    for (int i = probel; i<num.length(); ++i){
+        Y.append(1, num[i]); // добавление в конец строки 1 символ num[i]
+    }
+    double y = atof(Y.c_str());
+    return y;
+}
 
-void calculate(double x0,double h0, double vx, double vy, vector<double> &X, vector<double> &H, int &result, int dir)
+void phys(double x0,double h0, double vx, double vy, vector<double> &X, vector<double> &H, int &result, int dir)
 {
     double y;
     double t;
@@ -46,7 +53,7 @@ void calculate(double x0,double h0, double vx, double vy, vector<double> &X, vec
             double vyt = vy - 9.81 * t * dir;
 
             dir = dir * -1;
-            calculate(X[i], y, vx, vyt, X, H, result, dir);
+            phys(X[i], y, vx, vyt, X, H, result, dir);
             return;
         }
     }
@@ -59,15 +66,15 @@ int main(int argc, char** argv)
 //int main()
 {
 
-    string filename;
+    string input_filename;
 
     if (argc == 2)
     {
-        filename = argv[1];
+        input_filename = argv[1];
     } else {
-        filename = "input.txt";
+        input_filename = "input.txt";
     }
-    ifstream input_file(filename);
+    ifstream file_in(input_filename);
 
 
     // все необходимые переменные:
@@ -75,52 +82,51 @@ int main(int argc, char** argv)
     double h0;
     double vx;
     double vy;
-    string line;
-
+    double t; // текущее время
+    double y; // высота полета шарика при данном t
     vector<double> X;
-    vector<double> H;
+    vector<double> Y;
+    string num;
 
-    if (input_file.is_open())
+    if (file_in.is_open())
     {
         // Получаем начальную высоту и координаты вектора начальной скорости:
-        get_prop(input_file,h0);
-        get_prop(input_file,vx);
-        get_prop(input_file,vy);
+        getline(file_in,num);
+        h0 = atof(num.c_str());
+        getline(file_in,num);
+        vx = get_x(num);
+        vy = get_y(num);
 
         //Непосредственно сам рассчет
 
         // Сначала мы считаем данные до 1го столкновения
         // dir: 1 - вправо, -1 - влево
-        // func
-        double t; // текущее время
-        double y; // высота полета шарика при данном t
-        while (getline(input_file, line))
+
+        while (getline(file_in,num))
         {
-            get_bar(input_file, X, H);
+            X.push_back(get_x(num));
+            Y.push_back(get_y(num));
 
             t =  (X.back() - 0)/(vx);
             y =  h0 + vy * t - 9.81 * t * t / 2;
 
-            if(H.back() < y) // если пролетает выше
+            if(Y.back() < y) // если пролетает выше
             {
                 sector++;
             }
             else if((y < 0) || (sector == 0)) // если не долетел до следующей
             {
-                break;
+
             }
             else // столкновение
             {
                 double vy_t = vy - 9.81 * t ;
-                calculate(X.back(), y, vx, vy_t, X, H, sector, -1);
-                break;
+                phys(X.back(), y, vx, vy_t, X, Y, sector, -1);
+
             }
         }
     }
-
     cout << sector;
-
-
 
     return 0;
 }
